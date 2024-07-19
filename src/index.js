@@ -18,9 +18,12 @@ app.get('/', (req, res) => {
     res.send('Running API');
 });
 
+
+const keyPath = path.resolve(__dirname, '../key.pem');
+const certPath = path.resolve(__dirname, '../cert.pem');
 const options = {
-    key: fs.readFileSync('./key.pem', 'utf8'),
-    cert: fs.readFileSync('./cert.pem', 'utf8')
+    key: fs.readFileSync(keyPath, 'utf8'),
+    cert: fs.readFileSync(certPath, 'utf8')
 };
 const httpsServer = https.createServer(options, app);
 
