@@ -24,12 +24,16 @@ const options = {
 };
 //const httpsServer = https.createServer(options, app);
 
+httpServer.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server listening at port ${PORT}`);
+  }).catch(() => {
+    console.log("Server connection failed")
+});
+
 mongoose.connect(process.env.MONGODB_URI)
 .then(() => {
     console.log("MongoDB connection success");
-    httpServer.listen(PORT, '0.0.0.0', () => {
-        console.log(`Server listening at port ${PORT}`);
-      });/*
+    /*
     httpsServer.listen(PORT, '0.0.0.0', () => {
         console.log("Server listening at port "+PORT);
     });*/
