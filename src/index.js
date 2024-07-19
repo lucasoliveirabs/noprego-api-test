@@ -18,13 +18,13 @@ app.get('/', (req, res) => {
     res.send('Running API');
 });
 
-const options = {
+/*const options = {
     key: fs.readFileSync('./localhost-key.pem', 'utf8'),
     cert: fs.readFileSync('./localhost.pem', 'utf8')
 };
-//const httpsServer = https.createServer(options, app);
+const httpsServer = https.createServer(options, app);*/
 
-httpServer.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, () => {
     console.log(`Server listening at port ${PORT}`);
   }).catch(() => {
     console.log("Server connection failed")
