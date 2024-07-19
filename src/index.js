@@ -5,9 +5,6 @@ import fs from 'fs';
 import mongoose from 'mongoose';
 import https from 'https';
 import http from 'http';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
 
 
 const app = express();
@@ -21,27 +18,24 @@ app.get('/', (req, res) => {
     res.send('Running API');
 });
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const keyPath = path.resolve(__dirname, '../key.pem');
-const certPath = path.resolve(__dirname, '../cert.pem');
-const options = {
-    key: fs.readFileSync(keyPath, 'utf8'),
-    cert: fs.readFileSync(certPath, 'utf8'),
-    passphrase: process.env.PASSPHRASE
+/*const options = {
+    key: fs.readFileSync('./localhost-key.pem', 'utf8'),
+    cert: fs.readFileSync('./localhost.pem', 'utf8')
 };
-const httpsServer = https.createServer(options, app);
+const httpsServer = https.createServer(options, app);*/
 
-/*app.listen(PORT, function(err){
+app.listen(PORT, function(err){
     if (err) console.log("Error in server setup");
     console.log("Server listening on Port", PORT);
-})*/
+})
 
 mongoose.connect(process.env.MONGODB_URI)
 .then(() => {
     console.log("MongoDB connection success");
+    /*
     httpsServer.listen(PORT, '0.0.0.0', () => {
         console.log("Server listening at port "+PORT);
-    });
+    });*/
 }).catch(() => {
-    console.log("MongoDB connection failed");
-});
+    console.log("MongoDB connection failed")
+})
