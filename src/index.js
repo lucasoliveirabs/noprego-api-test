@@ -6,6 +6,8 @@ import mongoose from 'mongoose';
 import https from 'https';
 import http from 'http';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
 
 
 const app = express();
@@ -19,7 +21,7 @@ app.get('/', (req, res) => {
     res.send('Running API');
 });
 
-
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const keyPath = path.resolve(__dirname, '../key.pem');
 const certPath = path.resolve(__dirname, '../cert.pem');
 const options = {
