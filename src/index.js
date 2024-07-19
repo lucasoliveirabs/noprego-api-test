@@ -25,8 +25,8 @@ app.listen(PORT, function(err){
 })*/
 
 const options = {
-    key: fs.readFileSync('./localhost-key.pem', 'utf8'),
-    cert: fs.readFileSync('./localhost.pem', 'utf8')
+    key: fs.readFileSync('./key.pem', 'utf8'),
+    cert: fs.readFileSync('./cert.pem', 'utf8')
 };
 
 mongoose.connect(process.env.MONGODB_URI)
