@@ -25,7 +25,7 @@ const httpsServer = https.createServer(options, app);
 mongoose.connect(process.env.MONGODB_URI)
 .then(() => {
     console.log("MongoDB connection success");
-    httpsServer.listen(PORT, () => {
+    httpsServer.listen(PORT, '0.0.0.0', () => {
         console.log("Server listening at port "+PORT);
     });
 }).catch(() => {
