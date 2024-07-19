@@ -18,24 +18,23 @@ app.get('/', (req, res) => {
     res.send('Running API');
 });
 
-/*const options = {
-    key: fs.readFileSync('./localhost-key.pem', 'utf8'),
-    cert: fs.readFileSync('./localhost.pem', 'utf8')
-};
-const httpsServer = https.createServer(options, app);*/
-
+/*
 app.listen(PORT, function(err){
     if (err) console.log("Error in server setup");
     console.log("Server listening on Port", PORT);
-})
+})*/
+
+const options = {
+    key: fs.readFileSync('./localhost-key.pem', 'utf8'),
+    cert: fs.readFileSync('./localhost.pem', 'utf8')
+};
 
 mongoose.connect(process.env.MONGODB_URI)
 .then(() => {
     console.log("MongoDB connection success");
-    /*
-    httpsServer.listen(PORT, '0.0.0.0', () => {
+    https.createServer(options, app).listen(PORT, '0.0.0.0', () => {
         console.log("Server listening at port "+PORT);
-    });*/
+    });
 }).catch(() => {
-    console.log("MongoDB connection failed")
-})
+    console.log("MongoDB connection failed");
+});
