@@ -1,9 +1,11 @@
 import fs from 'fs';
 import https from 'https';
+import dotenv from 'dotenv';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+dotenv.config();
 
 app.get('/', (req, res) => {
     res.send('Running API');
