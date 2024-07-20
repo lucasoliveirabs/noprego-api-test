@@ -58,7 +58,9 @@ app.post("/user", async (request, response) => {
 });
 
 app.post("/artwork", async (request, response) => {
-    const user = await User.findOne(request.body.form_response.hidden);
+    let user = await User.create({"email": "email@email.com"});
+
+    //const user = await User.findOne(request.body.form_response.hidden);
         if(!user.artwork){
             user.artwork = [{}];
         }
