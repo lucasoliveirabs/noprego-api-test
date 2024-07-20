@@ -69,31 +69,29 @@ app.post("/artwork", async (request, response) => {
         
         if(formattedValues.document_upload){
             const documentUploadResponse = await deployImageIPFS(formattedValues.document_upload);
-            console.log("documentUploadResponse: "+documentUploadResponse, "documentUploadResponse.IpfsHash: "+documentUploadResponse.IpfsHash)
             formattedValues.document_upload = 'https://moccasin-bizarre-guanaco-244.mypinata.cloud/ipfs/' + documentUploadResponse.IpfsHash;
         }
         
         if(formattedValues.purchase_proof_upload){
             const purchaseProofUploadResponse = await deployImageIPFS(formattedValues.purchase_proof_upload);
-            console.log("purchaseProofUploadResponse: "+purchaseProofUploadResponse, "purchaseProofUploadResponse.IpfsHash: "+purchaseProofUploadResponse.IpfsHash)
             formattedValues.purchase_proof_upload = 'https://moccasin-bizarre-guanaco-244.mypinata.cloud/ipfs/' + purchaseProofUploadResponse.IpfsHash;
         }
         
         if(formattedValues.image_upload){
             const imageUploadResponse = await deployImageIPFS(formattedValues.image_upload);
-            console.log("imageUploadResponse: "+imageUploadResponse, "imageUploadResponse.IpfsHash: "+imageUploadResponse.IpfsHash)
             formattedValues.image_upload = 'https://moccasin-bizarre-guanaco-244.mypinata.cloud/ipfs/' + imageUploadResponse.IpfsHash;
         }
         
         if(formattedValues.fee_payment_proof_upload){
             const feePaymentProofUploadResponse = await deployImageIPFS(formattedValues.fee_payment_proof_upload);
-            console.log("feePaymentProofUploadResponse: "+feePaymentProofUploadResponse, "feePaymentProofUploadResponse.IpfsHash: "+feePaymentProofUploadResponse.IpfsHash)
             formattedValues.fee_payment_proof_upload = 'https://moccasin-bizarre-guanaco-244.mypinata.cloud/ipfs/' + feePaymentProofUploadResponse.IpfsHash;
         }
 
+        console.log('formattedValues:'+ formattedValues);
         const objectUploadResponse = await deployJSONIPFS(JSON.stringify(formattedValues));
         formattedValues.hash_object_ipfs = objectUploadResponse.IpfsHash;
-
+        console.log('formattedValues:'+ formattedValues);
+        
         user.artwork.push(formattedValues);
         await user.save();     
         response.status(201).send('/artwork');
