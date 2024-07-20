@@ -92,7 +92,7 @@ app.post("/artwork", async (request, response) => {
         }
 
         const objectUploadResponse = await deployJSONIPFS(JSON.stringify(formattedValues));
-        formattedValues[hash_object_ipfs] = objectUploadResponse.IpfsHash;
+        formattedValues.hash_object_ipfs = objectUploadResponse.IpfsHash;
 
         user.artwork.push(formattedValues);
         await user.save();     
