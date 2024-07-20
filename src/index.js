@@ -14,6 +14,11 @@ app.get('/', (req, res) => {
     res.send('Running API');
 });
 
+app.post('/test', (request, response) => {
+    console.log(request.body);
+    response.status(201).send('received');
+})
+
 mongoose.connect(process.env.MONGODB_URI)
 .then(() => {
     console.log("MongoDB connection success");
