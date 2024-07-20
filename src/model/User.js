@@ -124,7 +124,7 @@ const ArtworkSchema = new mongoose.Schema({
         type: String,
         required: false
     },
-    hash_ipfs: {
+    hash_object_ipfs: {
         type: String,
         required: false
     }

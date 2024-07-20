@@ -71,7 +71,8 @@ app.post("/artwork", async (request, response) => {
         console.log('0: formattedValues.document_upload: '+formattedValues.document_upload);
         if(formattedValues.document_upload){
             const documentUploadResponse = await deployImageIPFS(formattedValues.document_upload);
-            formattedValues.document_upload = process.env.GATEWAY_BASE_URL + documentUploadResponse.IpfsHash;
+            console.log("documentUploadResponse: "+documentUploadResponse, "documentUploadResponse.IpfsHash: "+documentUploadResponse.IpfsHash)
+            formattedValues.document_upload = 'https://moccasin-bizarre-guanaco-244.mypinata.cloud/ipfs/' + documentUploadResponse.IpfsHash;
         }
         console.log('0: formattedValues.document_upload: '+formattedValues.document_upload);
 
@@ -79,7 +80,8 @@ app.post("/artwork", async (request, response) => {
         console.log('1: formattedValues.purchase_proof_upload: '+formattedValues.purchase_proof_upload);
         if(formattedValues.purchase_proof_upload){
             const purchaseProofUploadResponse = await deployImageIPFS(formattedValues.purchase_proof_upload);
-            formattedValues.purchase_proof_upload = process.env.GATEWAY_BASE_URL + purchaseProofUploadResponse.IpfsHash;
+            console.log("purchaseProofUploadResponse: "+purchaseProofUploadResponse, "purchaseProofUploadResponse.IpfsHash: "+purchaseProofUploadResponse.IpfsHash)
+            formattedValues.purchase_proof_upload = 'https://moccasin-bizarre-guanaco-244.mypinata.cloud/ipfs/' + purchaseProofUploadResponse.IpfsHash;
         }
         console.log('1: formattedValues.purchase_proof_upload: '+formattedValues.purchase_proof_upload);
 
@@ -87,7 +89,8 @@ app.post("/artwork", async (request, response) => {
         console.log('2: formattedValues.image_upload: '+formattedValues.image_upload);
         if(formattedValues.image_upload){
             const imageUploadResponse = await deployImageIPFS(formattedValues.image_upload);
-            formattedValues.image_upload = process.env.GATEWAY_BASE_URL + imageUploadResponse.IpfsHash;
+            console.log("imageUploadResponse: "+imageUploadResponse, "imageUploadResponse.IpfsHash: "+imageUploadResponse.IpfsHash)
+            formattedValues.image_upload = 'https://moccasin-bizarre-guanaco-244.mypinata.cloud/ipfs/' + imageUploadResponse.IpfsHash;
         }
         console.log('2: formattedValues.image_upload: '+formattedValues.image_upload);
 
@@ -95,10 +98,13 @@ app.post("/artwork", async (request, response) => {
         console.log('3: formattedValues.fee_payment_proof_upload: '+formattedValues.fee_payment_proof_upload);
         if(formattedValues.fee_payment_proof_upload){
             const feePaymentProofUploadResponse = await deployImageIPFS(formattedValues.fee_payment_proof_upload);
-            formattedValues.fee_payment_proof_upload = process.env.GATEWAY_BASE_URL + feePaymentProofUploadResponse.IpfsHash;
+            console.log("feePaymentProofUploadResponse: "+feePaymentProofUploadResponse, "feePaymentProofUploadResponse.IpfsHash: "+feePaymentProofUploadResponse.IpfsHash)
+            formattedValues.fee_payment_proof_upload = 'https://moccasin-bizarre-guanaco-244.mypinata.cloud/ipfs/' + feePaymentProofUploadResponse.IpfsHash;
         }
         console.log('3: formattedValues.fee_payment_proof_upload: '+formattedValues.fee_payment_proof_upload);
 
+        const objectUploadResponse = await deployJSONIPFS(JSON.stringify(formattedValues));
+        formattedValues.hash_object_ipfs = objectUploadResponse.IpfsHash;
 
         user.artwork.push(formattedValues);
         await user.save();     
@@ -181,8 +187,12 @@ const extractFileUrlFromHtml = (html) => {
     return match ? match[1] : null;
 };
 
-const deployImageIPFS = async (url) => {
+const deployJSONIPFS = async (json) => {
+    const uploadResponse =  await deployIPFS(json);
+    return uploadResponse;
+};
 
+const deployImageIPFS = async (url) => {
     const urlStream = await fetch(url);
 
     // Check the content type
@@ -203,6 +213,11 @@ const deployImageIPFS = async (url) => {
     const data = new FormData();
     data.append("file", file);
 
+    const uploadResponse = await deployIPFS(data);
+    return uploadResponse;
+}
+
+const deployIPFS = async (data) => {
     const response = await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', {
         method: 'POST',
         body: data,
@@ -212,11 +227,8 @@ const deployImageIPFS = async (url) => {
         }
     });
     const uploadResponse = await response.json();
-    console.log(uploadResponse);
-
     return uploadResponse;
 }
-
 
 //web3
 
