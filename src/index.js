@@ -188,7 +188,15 @@ const extractFileUrlFromHtml = (html) => {
 };
 
 const deployJSONIPFS = async (json) => {
-    const uploadResponse =  await deployIPFS(json);
+    const response = await fetch('https://api.pinata.cloud/pinning/pinJSONToIPFS', {
+        method: 'POST',
+        body: json,
+        headers: {
+            "pinata_api_key": process.env.PINATA_API_KEY,
+            "pinata_secret_api_key": process.env.PINATA_API_SECRET
+        }
+    });
+    const uploadResponse = await response.json();
     return uploadResponse;
 };
 
@@ -213,11 +221,6 @@ const deployImageIPFS = async (url) => {
     const data = new FormData();
     data.append("file", file);
 
-    const uploadResponse = await deployIPFS(data);
-    return uploadResponse;
-}
-
-const deployIPFS = async (data) => {
     const response = await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', {
         method: 'POST',
         body: data,
