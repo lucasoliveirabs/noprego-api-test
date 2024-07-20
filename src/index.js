@@ -66,45 +66,33 @@ app.post("/artwork", async (request, response) => {
         }
         
         const formattedValues = formatTypeformData(request, ARTWORK_FIELD_MAP_OPTION);
-        console.log('formattedValues: '+formattedValues);
-
-        console.log('0: formattedValues.document_upload: '+formattedValues.document_upload);
+        
         if(formattedValues.document_upload){
             const documentUploadResponse = await deployImageIPFS(formattedValues.document_upload);
             console.log("documentUploadResponse: "+documentUploadResponse, "documentUploadResponse.IpfsHash: "+documentUploadResponse.IpfsHash)
             formattedValues.document_upload = 'https://moccasin-bizarre-guanaco-244.mypinata.cloud/ipfs/' + documentUploadResponse.IpfsHash;
         }
-        console.log('0: formattedValues.document_upload: '+formattedValues.document_upload);
-
-
-        console.log('1: formattedValues.purchase_proof_upload: '+formattedValues.purchase_proof_upload);
+        
         if(formattedValues.purchase_proof_upload){
             const purchaseProofUploadResponse = await deployImageIPFS(formattedValues.purchase_proof_upload);
             console.log("purchaseProofUploadResponse: "+purchaseProofUploadResponse, "purchaseProofUploadResponse.IpfsHash: "+purchaseProofUploadResponse.IpfsHash)
             formattedValues.purchase_proof_upload = 'https://moccasin-bizarre-guanaco-244.mypinata.cloud/ipfs/' + purchaseProofUploadResponse.IpfsHash;
         }
-        console.log('1: formattedValues.purchase_proof_upload: '+formattedValues.purchase_proof_upload);
-
-
-        console.log('2: formattedValues.image_upload: '+formattedValues.image_upload);
+        
         if(formattedValues.image_upload){
             const imageUploadResponse = await deployImageIPFS(formattedValues.image_upload);
             console.log("imageUploadResponse: "+imageUploadResponse, "imageUploadResponse.IpfsHash: "+imageUploadResponse.IpfsHash)
             formattedValues.image_upload = 'https://moccasin-bizarre-guanaco-244.mypinata.cloud/ipfs/' + imageUploadResponse.IpfsHash;
         }
-        console.log('2: formattedValues.image_upload: '+formattedValues.image_upload);
-
-
-        console.log('3: formattedValues.fee_payment_proof_upload: '+formattedValues.fee_payment_proof_upload);
+        
         if(formattedValues.fee_payment_proof_upload){
             const feePaymentProofUploadResponse = await deployImageIPFS(formattedValues.fee_payment_proof_upload);
             console.log("feePaymentProofUploadResponse: "+feePaymentProofUploadResponse, "feePaymentProofUploadResponse.IpfsHash: "+feePaymentProofUploadResponse.IpfsHash)
             formattedValues.fee_payment_proof_upload = 'https://moccasin-bizarre-guanaco-244.mypinata.cloud/ipfs/' + feePaymentProofUploadResponse.IpfsHash;
         }
-        console.log('3: formattedValues.fee_payment_proof_upload: '+formattedValues.fee_payment_proof_upload);
 
         const objectUploadResponse = await deployJSONIPFS(JSON.stringify(formattedValues));
-        formattedValues.hash_object_ipfs = objectUploadResponse.IpfsHash;
+        formattedValues[hash_object_ipfs] = objectUploadResponse.IpfsHash;
 
         user.artwork.push(formattedValues);
         await user.save();     
@@ -182,7 +170,6 @@ const formatTypeformData = (request, fieldMapOption) => {
 }
 
 const extractFileUrlFromHtml = (html) => {
-    // Usando uma expressão regular simples para encontrar links de arquivos PDF e imagens
     const match = html.match(/href="(https:\/\/[^"]+\.(pdf|jpeg|jpg|png|gif))"/);
     return match ? match[1] : null;
 };
@@ -202,14 +189,11 @@ const deployJSONIPFS = async (json) => {
 
 const deployImageIPFS = async (url) => {
     const urlStream = await fetch(url);
-
-    // Check the content type
     const contentType = urlStream.headers.get('content-type');
+
     if (contentType.startsWith('text/html')) {
-        // If the content type is HTML, extract the file URL from the HTML content
         const html = await urlStream.text();
         const fileUrl = extractFileUrlFromHtml(html);
-
         if (!fileUrl) {
             throw new Error('Unable to find a valid file URL in the HTML content');
         }
