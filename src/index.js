@@ -87,11 +87,12 @@ app.post("/artwork", async (request, response) => {
             formattedValues.fee_payment_proof_upload = 'https://moccasin-bizarre-guanaco-244.mypinata.cloud/ipfs/' + feePaymentProofUploadResponse.IpfsHash;
         }
 
-        console.log('formattedValues:'+ formattedValues);
+        console.log('Formatted Values:', JSON.stringify(formattedValues, null, 2));
         const objectUploadResponse = await deployJSONIPFS(JSON.stringify(formattedValues));
+        console.log('objectUploadResponse.IpfsHash: '+objectUploadResponse.IpfsHash);
         formattedValues.hash_object_ipfs = objectUploadResponse.IpfsHash;
-        console.log('formattedValues:'+ formattedValues);
-        
+        console.log('Formatted Values:', JSON.stringify(formattedValues, null, 2));
+
         user.artwork.push(formattedValues);
         await user.save();     
         response.status(201).send('/artwork');
