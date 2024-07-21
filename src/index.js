@@ -58,9 +58,8 @@ app.post("/user", async (request, response) => {
 });
 
 app.post("/artwork", async (request, response) => {
-    let user = await User.create({"email": "email@email.com"});
-
-    //const user = await User.findOne(request.body.form_response.hidden);
+    try {
+        const user = await User.findOne(request.body.form_response.hidden);
         if(!user.artwork){
             user.artwork = [{}];
         }
@@ -87,17 +86,9 @@ app.post("/artwork", async (request, response) => {
             formattedValues.fee_payment_proof_upload = 'https://moccasin-bizarre-guanaco-244.mypinata.cloud/ipfs/' + feePaymentProofUploadResponse.IpfsHash;
         }
 
-        console.log('Formatted Values:', JSON.stringify(formattedValues, null, 2));
-        const objectUploadResponse = await deployJSONIPFS(JSON.stringify(formattedValues));
-        console.log('objectUploadResponse.IpfsHash: '+objectUploadResponse.IpfsHash);
-        formattedValues.hash_object_ipfs = objectUploadResponse.IpfsHash;
-        console.log('Formatted Values:', JSON.stringify(formattedValues, null, 2));
-
         user.artwork.push(formattedValues);
         await user.save();     
-        response.status(201).send('/artwork');
-    try {
-        
+        response.status(201).send('/artwork');  
     } catch (error) {
         response.status(500).json({message: error.message});
     }
