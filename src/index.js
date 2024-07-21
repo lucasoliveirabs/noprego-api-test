@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
 });
 
 app.post("/login", async (request, response) => {
-    try {
+    
         const fetchedUser = await User.findOne(request.body);
         let user = (fetchedUser) ? fetchedUser : await User.create(request.body);
         let lumixApiKey = await getApiKey();
@@ -38,13 +38,14 @@ app.post("/login", async (request, response) => {
             user = await user.save();
         }
         response.status(201).send({address: user.wallet.address});
+        try {
     } catch(error) {
         response.status(500).json({message: error.message});
     }
 });
 
 app.post("/user", async (request, response) => {
-    try {
+    
         const user = await User.findOne(request.body.form_response.hidden);
             if(!user.userdata){
                 user.userdata = {};
@@ -52,13 +53,14 @@ app.post("/user", async (request, response) => {
             user.userdata = formatTypeformData(request, USER_FIELD_MAP_OPTION);
             await user.save();
             response.status(201).send('User successfully updated');        
-    } catch (error) {
+            try {
+        } catch (error) {
         response.status(500).json({message: error.message});
     }
 });
 
 app.post("/artwork", async (request, response) => {
-    try {
+    
         const user = await User.findOne(request.body.form_response.hidden);
         if(!user.artwork){
             user.artwork = [{}];
@@ -89,6 +91,7 @@ app.post("/artwork", async (request, response) => {
         user.artwork.push(formattedValues);
         await user.save();     
         response.status(201).send('/artwork');  
+        try {
     } catch (error) {
         response.status(500).json({message: error.message});
     }
