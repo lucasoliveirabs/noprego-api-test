@@ -342,13 +342,15 @@ const deployImageIPFS = async (url) => {
     return uploadResponse;
 }
 
+app.listen(PORT, function(err){
+    if (err) console.log("Error - server not listening");
+    console.log("Server listening on Port", PORT);
+})
+
 mongoose.connect(process.env.MONGODB_URI)
 .then(() => {
     console.log("MongoDB connection success");
-    app.listen(PORT, function(err){
-        if (err) console.log("Error - server not listening");
-        console.log("Server listening on Port", PORT);
-    })
+    
 }).catch(() => {
     console.log("MongoDB connection failed")
 })
